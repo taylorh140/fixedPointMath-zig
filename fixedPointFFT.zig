@@ -12,7 +12,6 @@ pub fn GetFFT(fftBits: comptime_int, FixedType_t: type, TrigLut: ?type) type {
 
         // FFT implementation for fixed size N=256
         pub fn fft(data: *[N]Complex(F)) void {
-            // Bit-reversal permutation using precomputed table
             for (0..N) |i| {
                 const j = @bitReverse(@as(fftSize_t, @intCast(i)));
                 if (j > i) {
@@ -64,10 +63,15 @@ pub fn GetFFT(fftBits: comptime_int, FixedType_t: type, TrigLut: ?type) type {
 }
 
 // Example usage
-pub fn main() !void {
+test "basic setup" {
+    // Make a fixed point type with desired scale
     const ftype = fp.FixedPoint(32, std.math.pow(usize, 2, 20));
+    // Make a complex type using the fixed point type
     const cftype = Complex(ftype);
-    const LUT = lut.TrigTable(ftype, 256, .linear);
+    // Generate a trig lookup table (optional) it will use the sin/cos definition in the
+    // fixedpoint.zig otherwise
+    const LUT = lut.TrigTable(ftype, 256, .linear); 
+    // Generate a 2^5 element fixed point fft.
     const fft_t = GetFFT(5, ftype, LUT);
 
     var data: [fft_t.N]cftype = undefined;
