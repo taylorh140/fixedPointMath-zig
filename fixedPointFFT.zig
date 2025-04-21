@@ -62,7 +62,7 @@ pub fn GetFFT(fftBits: comptime_int, FixedType_t: type, TrigLut: ?type) type {
     };
 }
 
-// Example usage
+// Example usage not really a test.
 test "basic setup" {
     // Make a fixed point type with desired scale
     const ftype = fp.FixedPoint(32, std.math.pow(usize, 2, 20));
