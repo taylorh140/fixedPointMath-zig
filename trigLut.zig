@@ -134,12 +134,13 @@ pub fn TrigTable(F: type, comptime M: u32, comptime interpolation: enum { neares
     };
 }
 
-// Example usage
-pub fn main() void {
+// Example usage not really a test TODO make real test 
+test "usage" {
+    // make a fixed point type for using
     const F = fp.i32p16;
-    // Define the LUT with 32 total bits, 11 fractional bits (2^11 = 2048), 256 points, and nearest interpolation
+    // Define the LUT with 32 total bits, 11 fractional bits (2^11 = 2048), 256 points, and linear interpolation
     const LUT = TrigTable(F, 256, .linear);
-    const extra = 4;
+    const extra = 4; // makes 3 points between each LUT point
 
     for (0..LUT.num_entries * extra) |i| {
         const t: f64 = @as(f64, @floatFromInt(i)) / @as(f64, @floatFromInt(LUT.num_entries * extra));
@@ -148,15 +149,7 @@ pub fn main() void {
         const inner = frequency * num;
         const val = LUT.cosSin(.fromFloat64Nearest(inner));
         // _ = val;
+        // print them out so you can verify the sin looks right :)
         std.io.getStdOut().writer().print("{any}:{any}:{any}:{any}:{any}:{any}\n", .{ inner, F.fromFloat64Nearest(inner).raw, val.cos.raw, val.sin.raw, F.fromFloat64Nearest(std.math.cos(inner)).raw, F.fromFloat64Nearest(std.math.sin(inner)).raw }) catch {};
     }
-
-    // std.debug.print("{}\n", .{@as(u32, @intFromFloat(0.49999999))});
-    // std.debug.print("{}\n", .{@as(u32, @intFromFloat(0.5001))});
-
-    // std.debug.print("{}\n", .{@as(i32, @intFromFloat(0.49999999 + 0.5))});
-    // std.debug.print("{}\n", .{@as(i32, @intFromFloat(0.5001 + 0.5))});
-
-    // std.debug.print("{}\n", .{@as(i32, @intFromFloat(-0.49999999 - 0.5))});
-    // std.debug.print("{}\n", .{@as(i32, @intFromFloat(-0.5001 - 0.5))});
 }
