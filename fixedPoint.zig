@@ -1,3 +1,4 @@
+// THIS FILE IS A MOSTLY COPY OF zigfp https://github.com/ziglibs/zigfp
 const std = @import("std");
 
 /// high range, low precision fixed point value between -2.000.000 and +2.000.000, with a precision of roughly 0.001
